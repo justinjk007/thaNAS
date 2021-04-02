@@ -1,0 +1,23 @@
+* [[file:/ssh:kaipada@192.168.0.10:~/][thaNAS]]
+
+#+CAPTION: Purple bad guy saying I am inevitable
+#+html: <p align="center"><img src="fluff/MrPurple.gif" /></p>
+
+Home NAS / Plex media server setup
+
+** Setting up ansible
+
+#+begin_src sh
+pip install ansible
+pip install passlib
+#+end_src
+
+Set up the server list to play on
+file:./ansible_hosts.conf
+
+Check inventory after setting up file
+#+begin_src sh
+sudo mkdir /etc/ansible
+sudo ln -s ~/Repos/Notes/thaNAS/ansible_hosts.conf /etc/ansible/hosts
+ansible-inventory --list -y
+#+end_src
