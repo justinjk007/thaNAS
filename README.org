@@ -21,3 +21,34 @@ sudo mkdir /etc/ansible
 sudo ln -s ~/Repos/Notes/thaNAS/ansible_hosts.conf /etc/ansible/hosts
 ansible-inventory --list -y
 #+end_src
+
+** Test connection
+
+Add public key to the server as root and then test out connection
+
+Tries to ssh as root in this case
+#+begin_src sh
+ansible all -m ping -u root
+#+end_src
+
+** Vault to store passwords
+
+file:ansible_vault_password.txt --> vault password
+file:ansible_vault.yml --> Put passwords here
+
+#+begin_src sh
+cd ~/Repos/thaNAS/
+ansible-vault create ansible_vault.yml
+ansible-vault decrypt --vault-password-file=ansible_vault_password.txt ansible_vault.yml
+ansible-vault encrypt --vault-password-file=ansible_vault_password.txt ansible_vault.yml
+#+end_src
+
+** Execute the playbook
+
+#+begin_src sh
+cd ~/Repos/thaNAS
+
+ansible-playbook setup_thaNAS_playbook.yml --list-tasks --vault-pass-file ansible_vault_password.txt
+# execute
+ansible-playbook setup_loamy_playbook.yml -u root --vault-pass-file ansible_vault_password.txt
+#+end_src
