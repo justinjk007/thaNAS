@@ -48,14 +48,6 @@ ansible-vault decrypt --vault-password-file=ansible_vault_password.txt ansible_v
 ansible-vault encrypt --vault-password-file=ansible_vault_password.txt ansible_vault.yml
 #+end_src
 
-** Execute the playbook
-
-#+begin_src sh
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --list-tasks --vault-pass-file ansible_vault_password.txt
-
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf -u root --vault-pass-file ansible_vault_password.txt --ask-pass
-#+end_src
-
 ** Set VPN password in the vault
 
 file:ansible_vault.yml --> Put passwords here
@@ -64,3 +56,42 @@ file:ansible_vault.yml --> Put passwords here
 OPENVPN_USERNAME: sdsdsijsldijij
 OPENVPN_PASSWORD: sdopksdpjsdpsijpass
 #+end_src
+
+** Execute the playbook
+
+#+begin_src sh
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf -u root --vault-pass-file ansible_vault_password.txt --ask-pass
+#+end_src
+
+** Bring the docker containers up
+
+Create everything
+#+begin_src sh
+cd ~/plex
+# likley problematic one so run it alone to fix it if need be because this container also holds the VPN info
+docker-compose up transmission
+
+docker-compose up # run all the services we just set up
+
+# run as deamon FOREVEEEE
+docker-compose up -d
+#+end_src
+
+** Web config
+
+file:/ssh:kaipada@192.168.0.10:/mnt/data
+
+Transmission      ==> http://192.168.0.10:9091
+Jackett           ==> http://192.168.0.10:9117
+Radarr            ==> http://192.168.0.10:7878
+Sonarr            ==> http://192.168.0.10:8989
+Plex(After setup) ==> http://192.168.0.10:32400/web
+
+Plex ssh tunneling, ssh like this first then the URL below will start to work, once we login in and setup stuff the normal URL above will work
+#+begin_src sh
+ssh -L32400:localhost:32400 kaipada@192.168.0.10
+#+end_src
+
+Plex         ==> http://localhost:32400/web
+
+See more detailed write up: file:fluff/DetailedWriteUp.md
