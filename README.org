@@ -20,6 +20,9 @@ Check inventory after setting up file
 sudo mkdir /etc/ansible
 sudo ln -s ~/Repos/Notes/thaNAS/ansible_hosts.conf /etc/ansible/hosts
 ansible-inventory --list -y
+
+# or specify inventory
+ansible-inventory -i ansible_hosts.conf --list -y
 #+end_src
 
 ** Test connection
@@ -46,6 +49,6 @@ ansible-vault encrypt --vault-password-file=ansible_vault_password.txt ansible_v
 ** Execute the playbook
 
 #+begin_src sh
-ansible-playbook setup_thaNAS_playbook.yml --list-tasks --vault-pass-file ansible_vault_password.txt
-ansible-playbook setup_thaNAS_playbook.yml -u root --vault-pass-file ansible_vault_password.txt # execute
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --list-tasks --vault-pass-file ansible_vault_password.txt
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf -u root --vault-pass-file ansible_vault_password.txt # execute
 #+end_src
