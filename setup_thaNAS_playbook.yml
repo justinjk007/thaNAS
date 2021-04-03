@@ -1,6 +1,6 @@
-################################################################
-# Playbook was tested on Ubuntu 20.04 minimal install over ssh #
-################################################################
+########################################################################
+# Playbook was tested on Ubuntu 20.04 (focal) minimal install over ssh #
+########################################################################
 
 ---
 - hosts: thanas
@@ -9,36 +9,24 @@
   vars_files: ansible_vault.yml
 
   tasks:
-    - name: Add user
+    - name: Add user and add user to sudoers list
       user:
-        name: "kaipada"
+        name: kaipada
+        groups: sudo
+        append: yes
         password: "{{ password |  password_hash('sha512') }}"
         create_home: yes
         shell: /bin/bash
-      tags: [ 'setup' ]
-    - name: Add user to sudoers list
-      ansible.builtin.command: usermod -a -G sudo kaipada
-      tags: [ 'setup' ]
-    - name: Install Packages
-      apt: name={{ item }} update_cache=yes state=latest
-      loop: [ 'vim','rsync','wget','screen' ]
-      tags: [ 'install' ]
     - name: Add authorized keys
       authorized_key:
-        user: "kaipada"
-        state: present
-        key: '{{ item }}'
+        user=kaipada state=present key='{{ item }}'
       with_file:
         - key.pub
-      tags: ['keys']
     - name: Add authorized keys for root
       authorized_key:
-        user: "root"
-        state: present
-        key: '{{ item }}'
+        user=root state=present key='{{ item }}'
       with_file:
         - key.pub
-      tags: ['keys']
     - name: Copy a custom ssh banner
       ansible.builtin.copy:
         src: ssh_banner.txt
@@ -46,20 +34,17 @@
         owner: root
         group: root
         mode: '0755'
-      tags: [ 'setup','ssh' ]
     - name: Enable custom banner
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         firstmatch: yes
         regexp: '^(.*)Banner'
         line: Banner /etc/ssh/sshd-banner
-      tags: [ 'setup','ssh' ]
     - name: Set a hostname
       ansible.builtin.hostname:
-        name: thanas
+        name: thaNAS
     - name: Restart sshd service
       service: name=sshd state=restarted
-      tags: [ 'ssh' ]
     - name: Setup screen
       ansible.builtin.copy:
         src: .screenrc
@@ -67,7 +52,6 @@
         owner: kaipada
         group: kaipada
         mode: '0755'
-      tags: [ 'setup' ]
     - name: Create media directories
       file:
         path: '{{ item }}'
@@ -77,6 +61,7 @@
         - /mnt/data/downloads
         - /mnt/data/media/tv
         - /mnt/data/media/movies
+        - /home/kaipada/plex
     - name: Create symlinks
       file:
         src: "/mnt/data/{{ item }}"
@@ -85,4 +70,83 @@
       with_items:
         - downloads
         - media
-      tags: [ 'link' ]
+    - name: Install Packages
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg', 'lsb-release' ]
+      tags: [ 'install' ]
+    - name: Get ubuntu version
+      command: lsb_release -cs
+      register: ubuntu_version
+      tags: [ 'install','docker' ]
+    - name: Get system info
+      command: uname -s
+      register: unameS
+      tags: [ 'install','docker' ]
+    - name: Get system info
+      command: uname -m
+      register: unameM
+      tags: [ 'install','docker' ]
+    - name: Add a signing key for docker
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+        state: present
+      tags: [ 'install','docker' ]
+    - name: Add docker repository into sources list
+      ansible.builtin.apt_repository:
+        repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ubuntu_version.stdout }} stable'
+        filename: docker.list
+        state: present
+      tags: [ 'install','docker' ]
+    - name: Install Packages
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'docker-ce','docker-ce-cli','containerd.io']
+      tags: [ 'install','docker' ]
+    - name: Add user to docker group
+      user:
+        name=kaipada groups=docker append=yes
+      tags: [ 'install','docker' ]
+    - name: Install docker-compose
+      get_url:
+         url : 'https://github.com/docker/compose/releases/download/1.28.5/docker-compose-{{ unameS.stdout }}-{{ unameM.stdout }}'
+         dest: /usr/local/bin/docker-compose
+         mode: 'u+x,g+x'
+      tags: [ 'install','docker' ]
+    - name: Copy docker compose file over to remote
+      ansible.builtin.copy:
+        src: docker-compose.yml
+        dest: /home/kaipada/plex/docker-compose.yml
+        owner: kaipada
+        group: kaipada
+        mode: '0755'
+      tags: [ 'install','docker', 'compose']
+    - name: Change username in docker compose file
+      ansible.builtin.lineinfile:
+        path: /home/kaipada/plex/docker-compose.yml
+        regexp: '^(.*)OPENVPN_USERNAME'
+        line: "        - OPENVPN_USERNAME={{ OPENVPN_USERNAME }}"
+      tags: [ 'install','docker', 'compose']
+    - name: Change password in docker compose file
+      ansible.builtin.lineinfile:
+        path: /home/kaipada/plex/docker-compose.yml
+        regexp: '^(.*)OPENVPN_PASSWORD'
+        line: "        - OPENVPN_PASSWORD={{ OPENVPN_PASSWORD }}"
+      tags: [ 'install','docker', 'compose']
+    - name: Allow all access to some tcp ports
+      ufw:
+        rule: allow
+        port: '{{ item }}'
+        proto: tcp
+      with_items: ['22','7878','8989','9091','32400','20']
+      tags: [ 'ufw']
+    - name: Allow all access to some udp ports
+      ufw:
+        rule: allow
+        port: '{{ item }}'
+        proto: udp
+      with_items: ['32400']
+      tags: [ 'ufw']
+    - name: Enable UFW
+      ufw:
+        state: enabled
+      tags: [ 'ufw']

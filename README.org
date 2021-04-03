@@ -55,3 +55,12 @@ ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --list-tasks --
 
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf -u root --vault-pass-file ansible_vault_password.txt --ask-pass
 #+end_src
+
+** Set VPN password in the vault
+
+file:ansible_vault.yml --> Put passwords here
+
+#+begin_src yml
+OPENVPN_USERNAME: sdsdsijsldijij
+OPENVPN_PASSWORD: sdopksdpjsdpsijpass
+#+end_src

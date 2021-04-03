@@ -1,0 +1,88 @@
+version: "3.0"
+services:
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+    volumes:
+      - ./config/jackett:/config
+    ports:
+      - 9117:9117
+    restart: unless-stopped
+  sonarr:
+    image: linuxserver/sonarr:preview
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+    volumes:
+      - ./config/sonarr:/config
+      - /mnt/data:/mnt/data
+    ports:
+      - 8989:8989
+    depends_on:
+      - jackett
+      - transmission
+    restart: unless-stopped
+  radarr:
+    image: linuxserver/radarr:preview
+    container_name: radarr
+    hostname: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Toronto
+    volumes:
+      - ./config/radarr:/config
+      - /mnt/data:/mnt/data
+    ports:
+      - 7878:7878
+    depends_on:
+      - jackett
+      - transmission
+    restart: unless-stopped
+  transmission:
+    image: haugene/transmission-openvpn
+    container_name: transmission
+    volumes:
+        - /mnt/data:/mnt/data
+    environment:
+        - PUID=1000
+        - PGID=1000
+        - CREATE_TUN_DEVICE=true
+        - OPENVPN_PROVIDER=NORDVPN
+        - NORDVPN_COUNTRY=CA
+        - OPENVPN_USERNAME=username
+        - OPENVPN_PASSWORD=pass
+        - WEBPROXY_ENABLED=false
+        - TRANSMISSION_DOWNLOAD_DIR=/mnt/data/downloads
+        - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=true
+        - TRANSMISSION_SEED_QUEUE_ENABLED=true
+        - TRANSMISSION_INCOMPLETE_DIR_ENABLED=false
+        - LOCAL_NETWORK=192.168.0.0/16
+    cap_add:
+        - NET_ADMIN
+    logging:
+        driver: json-file
+        options:
+            max-size: 10m
+    ports:
+        - "9091:9091"
+    restart: unless-stopped
+  plex:
+    image: linuxserver/plex
+    container_name: plex
+    volumes:
+      - /mnt/data/media:/media
+      - ./config/plex:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - version=docker
+    ports:
+      - 32400:32400
+    restart: unless-stopped
