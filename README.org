@@ -63,7 +63,7 @@ OPENVPN_PASSWORD: sdopksdpjsdpsijpass
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf -u root --vault-pass-file ansible_vault_password.txt --ask-pass
 #+end_src
 
-** Bring the docker containers up
+** Bring the docker containers up manually now that server is setup
 
 Create everything
 #+begin_src sh
@@ -73,7 +73,7 @@ docker-compose up transmission
 
 docker-compose up # run all the services we just set up
 
-# run as deamon FOREVEEEE
+# run as deamon FOREVAAAAAA
 docker-compose up -d
 #+end_src
 
@@ -81,17 +81,17 @@ docker-compose up -d
 
 file:/ssh:kaipada@192.168.0.10:/mnt/data
 
-Transmission      ==> http://192.168.0.10:9091
-Jackett           ==> http://192.168.0.10:9117
-Radarr            ==> http://192.168.0.10:7878
-Sonarr            ==> http://192.168.0.10:8989
-Plex(After setup) ==> http://192.168.0.10:32400/web
+- Transmission      ==> http://192.168.0.10:9091
+- Jackett           ==> http://192.168.0.10:9117
+- Radarr            ==> http://192.168.0.10:7878
+- Sonarr            ==> http://192.168.0.10:8989
+- Plex(After setup) ==> http://192.168.0.10:32400/web
 
 Plex ssh tunneling, ssh like this first then the URL below will start to work, once we login in and setup stuff the normal URL above will work
 #+begin_src sh
 ssh -L32400:localhost:32400 kaipada@192.168.0.10
 #+end_src
 
-Plex         ==> http://localhost:32400/web
+- Plex         ==> http://localhost:32400/web
 
 See more detailed write up: file:fluff/DetailedWriteUp.md
