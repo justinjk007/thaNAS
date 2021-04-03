@@ -3,7 +3,9 @@
 #+CAPTION: Purple bad guy saying I am inevitable
 #+html: <p align="center"><img src="fluff/MrPurple.gif" /></p>
 
-Home NAS / Plex media server setup
+Home NAS / Plex media server setup.
+- Server setup using ansible
+- Setup docker containers for all services and isolated VPN for transmission
 
 ** Setting up ansible
 
