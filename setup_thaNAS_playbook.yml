@@ -1,0 +1,88 @@
+################################################################
+# Playbook was tested on Ubuntu 20.04 minimal install over ssh #
+################################################################
+
+---
+- hosts: thanas
+  become: true
+  gather_facts: true
+  vars_files: ansible_vault.yml
+
+  tasks:
+    - name: Add user
+      user:
+        name: "kaipada"
+        password: "{{ password |  password_hash('sha512') }}"
+        create_home: yes
+        shell: /bin/bash
+      tags: [ 'setup' ]
+    - name: Add user to sudoers list
+      ansible.builtin.command: usermod -a -G sudo kaipada
+      tags: [ 'setup' ]
+    - name: Install Packages
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'vim','rsync','wget','screen' ]
+      tags: [ 'install' ]
+    - name: Add authorized keys
+      authorized_key:
+        user: "kaipada"
+        state: present
+        key: '{{ item }}'
+      with_file:
+        - key.pub
+      tags: ['keys']
+    - name: Add authorized keys for root
+      authorized_key:
+        user: "root"
+        state: present
+        key: '{{ item }}'
+      with_file:
+        - key.pub
+      tags: ['keys']
+    - name: Copy a custom ssh banner
+      ansible.builtin.copy:
+        src: ssh_banner.txt
+        dest: /etc/ssh/sshd-banner
+        owner: root
+        group: root
+        mode: '0755'
+      tags: [ 'setup','ssh' ]
+    - name: Enable custom banner
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        firstmatch: yes
+        regexp: '^(.*)Banner'
+        line: Banner /etc/ssh/sshd-banner
+      tags: [ 'setup','ssh' ]
+    - name: Set a hostname
+      ansible.builtin.hostname:
+        name: thanas
+    - name: Restart sshd service
+      service: name=sshd state=restarted
+      tags: [ 'ssh' ]
+    - name: Setup screen
+      ansible.builtin.copy:
+        src: .screenrc
+        dest: /home/kaipada/.screenrc
+        owner: kaipada
+        group: kaipada
+        mode: '0755'
+      tags: [ 'setup' ]
+    - name: Create media directories
+      file:
+        path: '{{ item }}'
+        state: directory
+      with_items:
+        - /mnt/data
+        - /mnt/data/downloads
+        - /mnt/data/media/tv
+        - /mnt/data/media/movies
+    - name: Create symlinks
+      file:
+        src: "/mnt/data/{{ item }}"
+        dest: "/home/kaipada/{{ item }}"
+        state: link
+      with_items:
+        - downloads
+        - media
+      tags: [ 'link' ]

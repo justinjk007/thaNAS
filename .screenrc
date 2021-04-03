@@ -1,0 +1,19 @@
+autodetach on
+defmonitor off
+vbell off
+vbell_msg 'Ding Ding'
+activity 'Activity in window % ~'
+bell 'Bell at window % ~'
+activity 'Activity in %t'
+bell 'Bell in window %t'
+startup_message off
+defscrollback 8000
+silencewait 30
+hardstatus alwayslastline
+hardstatus string '%{= Kd} %{= Kd}%-w%{= Kr}[%{= KW}%n %t%{= Kr}]%{= Kd}%+w %-= %{KG} %H%{KW}'
+caption always "%3n %t %c"
+screen -t Docker 0
+screen -t Screen 1
+termcapinfo xterm ti@:te@
+termcapinfo xterm-color ti@:te@
+bind b eval "windowlist"
