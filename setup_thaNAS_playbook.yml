@@ -72,46 +72,46 @@
         - media
     - name: Install Packages
       apt: name={{ item }} update_cache=yes state=latest
-      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg', 'lsb-release' ]
+      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg', 'lsb-release', 'p7zip-full' ]
       tags: [ 'install' ]
     - name: Get ubuntu version
       command: lsb_release -cs
       register: ubuntu_version
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Get system info
       command: uname -s
       register: unameS
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Get system info
       command: uname -m
       register: unameM
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Add a signing key for docker
       ansible.builtin.apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         keyring: /usr/share/keyrings/docker-archive-keyring.gpg
         state: present
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Add docker repository into sources list
       ansible.builtin.apt_repository:
         repo: 'deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ ubuntu_version.stdout }} stable'
         filename: docker.list
         state: present
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Install Packages
       apt: name={{ item }} update_cache=yes state=latest
       loop: [ 'docker-ce','docker-ce-cli','containerd.io']
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Add user to docker group
       user:
         name=kaipada groups=docker append=yes
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Install docker-compose
       get_url:
          url : 'https://github.com/docker/compose/releases/download/1.28.5/docker-compose-{{ unameS.stdout }}-{{ unameM.stdout }}'
          dest: /usr/local/bin/docker-compose
          mode: 'u+x,g+x'
-      tags: [ 'install','docker' ]
+      tags: [ 'docker' ]
     - name: Copy docker compose file over to remote
       ansible.builtin.copy:
         src: docker-compose.yml
@@ -119,19 +119,19 @@
         owner: kaipada
         group: kaipada
         mode: '0755'
-      tags: [ 'install','docker', 'compose']
+      tags: [ 'docker', 'compose']
     - name: Change username in docker compose file
       ansible.builtin.lineinfile:
         path: /home/kaipada/plex/docker-compose.yml
         regexp: '^(.*)OPENVPN_USERNAME'
         line: "        - OPENVPN_USERNAME={{ OPENVPN_USERNAME }}"
-      tags: [ 'install','docker', 'compose']
+      tags: [ 'docker', 'compose']
     - name: Change password in docker compose file
       ansible.builtin.lineinfile:
         path: /home/kaipada/plex/docker-compose.yml
         regexp: '^(.*)OPENVPN_PASSWORD'
         line: "        - OPENVPN_PASSWORD={{ OPENVPN_PASSWORD }}"
-      tags: [ 'install','docker', 'compose']
+      tags: [ 'docker', 'compose']
     - name: Allow all access to some tcp ports
       ufw:
         rule: allow
