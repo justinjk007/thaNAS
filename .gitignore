@@ -1,2 +1,3 @@
+.machine_config
 ansible_vault.yml
 ansible_vault_password.txt
