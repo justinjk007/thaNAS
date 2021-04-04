@@ -8,6 +8,7 @@
 source ~/.machine_config > /dev/null 2>&1
 
 cd ~/plex
+rm -rf thaNAS_config.7z
 7z a thaNAS_config ~/plex/config
 
 curl -X POST https://content.dropboxapi.com/2/files/upload \
