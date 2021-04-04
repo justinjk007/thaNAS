@@ -59,6 +59,14 @@ OPENVPN_USERNAME: sdsdsijsldijij
 OPENVPN_PASSWORD: sdopksdpjsdpsijpass
 #+end_src
 
+** Setup DROPBOX access code
+
+file:.machine_config
+
+#+begin_src sh
+export ACCESS_TOKEN=ssasasa
+#+end_src
+
 ** Execute the playbook
 
 #+begin_src sh
