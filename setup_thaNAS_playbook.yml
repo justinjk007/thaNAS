@@ -45,13 +45,17 @@
         name: thaNAS
     - name: Restart sshd service
       service: name=sshd state=restarted
-    - name: Setup screen
+    - name: Setup screen and other config
       ansible.builtin.copy:
-        src: .screenrc
-        dest: /home/kaipada/.screenrc
+        src: '{{ item }}'
+        dest: '/home/kaipada/{{ item }}'
         owner: kaipada
         group: kaipada
         mode: '0755'
+      with_items:
+        - .screenrc
+        - .machine_config
+      tags: [ 'backup']
     - name: Create media directories
       file:
         path: '{{ item }}'
@@ -150,3 +154,20 @@
       ufw:
         state: enabled
       tags: [ 'ufw']
+    - name: Setup config backup system
+      ansible.builtin.copy:
+        src: backup_config.sh
+        dest: /home/kaipada/plex/backup_config.sh
+        owner: kaipada
+        group: kaipada
+        mode: '0755'
+      tags: [ 'backup']
+    - name: Ensure backup job is run few times a day
+      ansible.builtin.cron:
+        name: "backup config"
+        minute: "5"
+        hour: "3,18"
+        job: "/home/kaipada/plex/backup_config.sh > /tmp/backup_config.log  2>&1"
+      become: yes
+      become_user: kaipada
+      tags: [ 'backup']
