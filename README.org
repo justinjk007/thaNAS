@@ -59,12 +59,12 @@ OPENVPN_USERNAME: sdsdsijsldijij
 OPENVPN_PASSWORD: sdopksdpjsdpsijpass
 #+end_src
 
-** Setup DROPBOX access code
+** Setup DROPBOX access token
 
-file:.machine_config
+file:ansible_vault.yml --> Put token here
 
-#+begin_src sh
-export ACCESS_TOKEN=ssasasa
+#+begin_src yml
+DROPBOX_ACCESS_TOKEN: ssasasatoken
 #+end_src
 
 ** Execute the playbook

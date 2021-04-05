@@ -45,7 +45,7 @@
         name: thaNAS
     - name: Restart sshd service
       service: name=sshd state=restarted
-    - name: Setup screen and other config
+    - name: Setup screen and other configs
       ansible.builtin.copy:
         src: '{{ item }}'
         dest: '/home/kaipada/{{ item }}'
@@ -54,8 +54,6 @@
         mode: '0755'
       with_items:
         - .screenrc
-        - .machine_config
-      tags: [ 'backup']
     - name: Create media directories
       file:
         path: '{{ item }}'
@@ -162,6 +160,12 @@
         group: kaipada
         mode: '0755'
       tags: [ 'backup']
+    - name: Change dropbox access token file
+      ansible.builtin.lineinfile:
+        path: /home/kaipada/plex/backup_config.sh
+        regexp: '^(.*)ACCESS_TOKEN='
+        line: "ACCESS_TOKEN='{{ DROPBOX_ACCESS_TOKEN }}'"
+      tags: ['backup']
     - name: Ensure backup job is run few times a day
       ansible.builtin.cron:
         name: "backup config"

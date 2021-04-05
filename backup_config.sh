@@ -3,9 +3,7 @@
 # Get access token, generate one if need too
 # https://www.dropbox.com/developers/apps/info/u908atkj2n0n8g7#settings
 
-# export these in .machine_config
-# export ACCESS_TOKEN=""
-source ~/.machine_config > /dev/null 2>&1
+ACCESS_TOKEN=""
 
 cd ~/plex
 rm -rf thaNAS_config.7z
