@@ -54,6 +54,9 @@
         mode: '0755'
       with_items:
         - .screenrc
+        - .bashrc
+        - .bash_profile
+      tags: [ 'bash' ]
     - name: Create media directories
       file:
         path: '{{ item }}'
