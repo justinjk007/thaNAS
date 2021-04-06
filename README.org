@@ -70,7 +70,7 @@ DROPBOX_ACCESS_TOKEN: ssasasatoken
 ** Execute the playbook
 
 #+begin_src sh
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf -u root --vault-pass-file ansible_vault_password.txt
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup

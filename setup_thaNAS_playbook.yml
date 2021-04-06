@@ -161,7 +161,7 @@
         dest: /home/kaipada/plex/backup_config.sh
         owner: kaipada
         group: kaipada
-        mode: '0755'
+        mode: '0700'
       tags: [ 'backup']
     - name: Change dropbox access token file
       ansible.builtin.lineinfile:
@@ -178,3 +178,29 @@
       become: yes
       become_user: kaipada
       tags: [ 'backup']
+    - name: Add transmission repository into sources list
+      ansible.builtin.apt_repository:
+        validate_certs: no
+        repo: 'ppa:transmissionbt/ppa'
+        state: present
+      tags: [ 'transmission' ]
+    - name: Install transmission remote
+      apt: update_cache=yes name=transmission-cli
+      tags: [ 'transmission' ]
+    - name: Setup transmission cleanup system
+      ansible.builtin.copy:
+        src: remove_completed.sh
+        dest: /home/kaipada/plex/remove_completed.sh
+        owner: kaipada
+        group: kaipada
+        mode: '0700'
+      tags: [ 'transmission' ]
+    - name: Ensure transmission cleanup job is run once a day
+      ansible.builtin.cron:
+        name: "remove completed"
+        minute: "7"
+        hour: "18" # evening at 6 'O clock
+        job: "/home/kaipada/plex/remove_completed.sh > /tmp/cleanup_transmission.log  2>&1"
+      become: yes
+      become_user: kaipada
+      tags: [ 'transmission' ]
