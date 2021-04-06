@@ -18,7 +18,7 @@ do
   STATE_STOPPED=`transmission-remote $HOST -t $TORRENTID -i | grep "State: Stopped\|Finished\|Idle"`
   # if the torrent is "Stopped", "Finished", or "Idle" after downloading 100%…
   if [ "$DL_COMPLETED" != "" ] && [ "$STATE_STOPPED" != "" ]; then
-    # remove the torrent from Transmission
+    # remove the torrent from Transmission and delete data.... data is linked to media dir anyways
     echo "Torrent $TORRENTID is completed."
     echo "Removing torrent from list."
     transmission-remote $HOST -t $TORRENTID -rad
