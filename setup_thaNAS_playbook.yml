@@ -77,7 +77,7 @@
         - media
     - name: Install Packages
       apt: name={{ item }} update_cache=yes state=latest
-      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg', 'lsb-release', 'p7zip-full' ]
+      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg', 'lsb-release', 'p7zip-full','python3-pip' ]
       tags: [ 'install' ]
     - name: Get ubuntu version
       command: lsb_release -cs

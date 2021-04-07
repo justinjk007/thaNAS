@@ -10,7 +10,7 @@ rm -rf thaNAS_config.7z
 7z a thaNAS_config ~/plex/config
 
 curl -X POST https://content.dropboxapi.com/2/files/upload \
-     --header "Authorization: Bearer $ACCESS_TOKEN" \
+    --header "Authorization: Bearer $ACCESS_TOKEN" \
     --header "Dropbox-API-Arg: {\"path\": \"/Backup/thaNAS_config.7z\",\"mode\": \"overwrite\",\"autorename\": true,\"mute\": false}" \
     --header "Content-Type: application/octet-stream" \
-    --data-binary @thaNAS_config.7z
+    --data-binary @"thaNAS_config.7z"
