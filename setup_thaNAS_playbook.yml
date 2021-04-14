@@ -155,6 +155,14 @@
       ufw:
         state: enabled
       tags: [ 'ufw']
+    - name: Setup dropbox upload system
+      get_url:
+        url: https://raw.githubusercontent.com/andreafabrizi/Dropbox-Uploader/master/dropbox_uploader.sh
+        dest: /home/kaipada/plex/dropbox_uploader.sh
+        owner: kaipada
+        group: kaipada
+        mode: '0700'
+      tags: [ 'backup']
     - name: Setup config backup system
       ansible.builtin.copy:
         src: backup_config.sh
@@ -163,12 +171,6 @@
         group: kaipada
         mode: '0700'
       tags: [ 'backup']
-    - name: Change dropbox access token file
-      ansible.builtin.lineinfile:
-        path: /home/kaipada/plex/backup_config.sh
-        regexp: '^(.*)ACCESS_TOKEN='
-        line: "ACCESS_TOKEN='{{ DROPBOX_ACCESS_TOKEN }}'"
-      tags: ['backup']
     - name: Ensure backup job is run few times a day
       ansible.builtin.cron:
         name: "backup config"

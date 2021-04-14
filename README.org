@@ -59,18 +59,11 @@ OPENVPN_USERNAME: sdsdsijsldijij
 OPENVPN_PASSWORD: sdopksdpjsdpsijpass
 #+end_src
 
-** Setup DROPBOX access token
-
-file:ansible_vault.yml --> Put token here
-
-#+begin_src yml
-DROPBOX_ACCESS_TOKEN: ssasasatoken
-#+end_src
-
 ** Execute the playbook
 
 #+begin_src sh
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags backup
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup
@@ -105,3 +98,13 @@ ssh -L32400:localhost:32400 kaipada@192.168.0.10
 - Plex         ==> http://localhost:32400/web
 
 See more detailed write up: file:fluff/DetailedWriteUp.md
+
+** Setup dropbox uploader to backup config
+
+https://github.com/andreafabrizi/Dropbox-Uploader
+
+Run
+#+begin_src sh
+~/plex/dropbox_uploader.sh
+#+end_src
+
