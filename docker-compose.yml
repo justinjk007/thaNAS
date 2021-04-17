@@ -46,6 +46,7 @@ services:
       - transmission
     restart: unless-stopped
   transmission:
+    # https://haugene.github.io/docker-transmission-openvpn/
     image: haugene/transmission-openvpn
     container_name: transmission
     volumes:
@@ -63,6 +64,8 @@ services:
         - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=true
         - TRANSMISSION_SEED_QUEUE_ENABLED=true
         - TRANSMISSION_INCOMPLETE_DIR_ENABLED=false
+        - TRANSMISSION_RATIO_LIMIT_ENABLED=true
+        - TRANSMISSION_RATIO_LIMIT=2
         - LOCAL_NETWORK=192.168.0.0/16
     cap_add:
         - NET_ADMIN
