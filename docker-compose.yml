@@ -89,3 +89,14 @@ services:
     ports:
       - 32400:32400
     restart: unless-stopped
+  rpdb: # https://ratingposterdb.com/
+    image: jaruba/rpdb-folders-docker
+    container_name: rpdb
+    volumes:
+      - /mnt/data/media:/media
+      - /mnt/data/media/movies:/rpdb/mounts/movies
+      - /mnt/data/media/tv:/rpdb/mounts/tv
+      - ./config/rpdb:/rpdb/config
+    ports:
+      - 8750:8750
+    restart: unless-stopped

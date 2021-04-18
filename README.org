@@ -89,6 +89,7 @@ file:/ssh:kaipada@192.168.0.10:/mnt/data
 - Radarr            ==> http://192.168.0.10:7878
 - Sonarr            ==> http://192.168.0.10:8989
 - Plex(After setup) ==> http://192.168.0.10:32400/web
+- RPDP              ==> http://192.168.0.10:8750/
 
 Plex ssh tunneling, ssh like this first then the URL below will start to work, once we login in and setup stuff the normal URL above will work
 #+begin_src sh
