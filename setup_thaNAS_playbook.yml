@@ -45,6 +45,11 @@
         name: thaNAS
     - name: Restart sshd service
       service: name=sshd state=restarted
+    - name: Keep the laptop working if the lid is closed
+      ansible.builtin.lineinfile:
+        path: /etc/systemd/logind.conf
+        regexp: '^(.*)HandleLidSwitch='
+        line: "HandleLidSwitch=ignore"
     - name: Setup screen and other configs
       ansible.builtin.copy:
         src: '{{ item }}'
