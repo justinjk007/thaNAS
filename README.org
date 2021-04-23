@@ -109,3 +109,8 @@ Run
 ~/plex/dropbox_uploader.sh
 #+end_src
 
+** Notes
+
+Change entire season audio track easily: https://www.pastatool.com/
+  - Make sure to turn off VPN before connecting to it
+
