@@ -8,7 +8,10 @@
 # p7zip Version 16.02 (locale=en_CA.UTF-8,Utf16=on,HugeFiles=on,64 bits,ASM,AES-NI)
 
 cd ~/plex
-rm -rf thaNAS_config.7z
+rm -rf thaNAS_config && mkdir thaNAS_config
+rsync -a --exclude="radarr" --exclude="sonarr" ~/plex/config thaNAS_config
+rsync -a ~/plex/config/radarr/Backups/scheduled/* thaNAS_config
+rsync -a ~/plex/config/sonarr/Backups/scheduled/* thaNAS_config
 
 PASSWORD_7z="<REPLACED BY ANSIBLE>"
 
@@ -18,6 +21,7 @@ PASSWORD_7z="<REPLACED BY ANSIBLE>"
 #     -mx=9: Level of compression (9 being ultra)
 #     -mhe: Encrypt file names
 #     -t7z: Generate a 7z archive
-7z -p$PASSWORD_7z -mx=9 -mhe -t7z a thaNAS_config ~/plex/config
+rm -rf thaNAS_config.7z
+7z -p$PASSWORD_7z -mx=9 -mhe -t7z a thaNAS_config ~/plex/thaNAS_config
 
 ~/plex/dropbox_uploader.sh upload thaNAS_config.7z Backup/thaNAS_config.7z
