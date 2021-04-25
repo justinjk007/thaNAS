@@ -176,6 +176,12 @@
         group: kaipada
         mode: '0700'
       tags: [ 'backup']
+    - name: Change password in backup script
+      ansible.builtin.lineinfile:
+        path: /home/kaipada/plex/backup_config.sh
+        regexp: 'PASSWORD_7z='
+        line: "PASSWORD_7z={{ PASSWORD_7Z }}"
+      tags: [ 'backup']
     - name: Ensure backup job is run few times a day
       ansible.builtin.cron:
         name: "backup config"

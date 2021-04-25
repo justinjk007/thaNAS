@@ -55,15 +55,17 @@ ansible-vault encrypt --vault-password-file=ansible_vault_password.txt ansible_v
 file:ansible_vault.yml --> Put passwords here
 
 #+begin_src yml
+password: server_password_we_wanna_set
 OPENVPN_USERNAME: sdsdsijsldijij
 OPENVPN_PASSWORD: sdopksdpjsdpsijpass
+PASSWORD_7Z: password used when backing up config files
 #+end_src
 
 ** Execute the playbook
 
 #+begin_src sh
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags compose
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags backup
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup
