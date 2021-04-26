@@ -10,8 +10,14 @@
 cd ~/plex
 rm -rf thaNAS_config && mkdir thaNAS_config
 rsync -a --exclude="radarr" --exclude="sonarr" ~/plex/config thaNAS_config
-rsync -a ~/plex/config/radarr/Backups/scheduled/* thaNAS_config
-rsync -a ~/plex/config/sonarr/Backups/scheduled/* thaNAS_config
+
+DIR="$HOME/plex/config/radarr/Backups/scheduled/"
+LATEST=`ls -Art $DIR | tail -n 1`
+rsync -a $DIR$LATEST thaNAS_config
+
+DIR="$HOME/plex/config/sonarr/Backups/scheduled/"
+LATEST=`ls -Art $DIR | tail -n 1`
+rsync -a $DIR$LATEST thaNAS_config
 
 PASSWORD_7z="<REPLACED BY ANSIBLE>"
 
