@@ -182,11 +182,11 @@
         regexp: 'PASSWORD_7z='
         line: "PASSWORD_7z={{ PASSWORD_7Z }}"
       tags: [ 'backup']
-    - name: Ensure backup job is run few times a day
+    - name: Ensure backup job is once a day
       ansible.builtin.cron:
         name: "backup config"
         minute: "5"
-        hour: "3,18"
+        hour: "18" # 6 'o clock
         job: "/home/kaipada/plex/backup_config.sh > /tmp/backup_config.log  2>&1"
       become: yes
       become_user: kaipada
