@@ -66,6 +66,7 @@ PASSWORD_7Z: password used when backing up config files
 #+begin_src sh
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags backup
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags trakt
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup
@@ -111,8 +112,17 @@ Run
 ~/plex/dropbox_uploader.sh
 #+end_src
 
+** Setup Plex Trakt Sync
+
+https://github.com/Taxel/PlexTraktSync#setup
+
+Run
+#+begin_src sh
+cd ~/plex/PlexTraktSync-0.8.16
+python3 main.py
+#+end_src
+
 ** Notes
 
 Change entire season audio track easily: https://www.pastatool.com/
   - Make sure to turn off VPN before connecting to it
-

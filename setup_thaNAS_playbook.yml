@@ -234,3 +234,39 @@
       become: yes
       become_user: kaipada
       tags: [ 'boruto' ]
+    - name: Download PlexTraktSync
+      get_url:
+         url : https://github.com/Taxel/PlexTraktSync/archive/refs/tags/0.8.16.zip
+         dest: /home/kaipada/plex/PlexTraktSync.zip
+         owner: kaipada
+         group: kaipada
+         mode: '0700'
+      tags: [ 'trakt' ]
+    - name: Unzip PlexTraktSync
+      ansible.builtin.unarchive:
+        src: /home/kaipada/plex/PlexTraktSync.zip
+        dest: /home/kaipada/plex/
+        owner: kaipada
+        group: kaipada
+        mode: '0700'
+        remote_src: yes
+      tags: [ 'trakt' ]
+    - name: Remove PlexTraktSync zip file
+      file:
+        state: absent
+        path: /home/kaipada/plex/PlexTraktSync.zip
+      tags: [ 'trakt' ]
+    - name: Install python requirements for PlexTraktSync
+      pip:
+        requirements: /home/kaipada/plex/PlexTraktSync-0.8.16/requirements.txt
+        executable: pip3
+      tags: [ 'trakt' ]
+      # Setup the app: https://github.com/Taxel/PlexTraktSync#setup
+    - name: Run plexTraktSync once every 2 hours
+      ansible.builtin.cron:
+        name: "PlexTraktSync"
+        hour: "*/2"
+        job: "cd /home/kaipada/plex/PlexTraktSync-0.8.16 && ./plex_trakt_sync.sh > /tmp/plex_trakt_sync.log  2>&1"
+      become: yes
+      become_user: kaipada
+      tags: [ 'traktcron' ]
