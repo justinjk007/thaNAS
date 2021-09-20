@@ -111,6 +111,14 @@ Run
 ~/plex/dropbox_uploader.sh
 #+end_src
 
+** Updating the containers from time to time
+
+#+begin_src sh
+cd ~/plex # go to the directory with the docker-compose file
+docker-compose pull # pull new images
+docker-compose up -d # bring up new images
+#+end_src
+
 ** Setup Plex Trakt Sync
 
 https://github.com/Taxel/PlexTraktSync#setup
