@@ -2,7 +2,7 @@
 
 HOST=192.168.0.10:9091
 
-KEEP_FOREVER_IDS="2" # seperate ID list by space
+KEEP_FOREVER_IDS="2 3 4 5" # seperate ID list by space
 
 # use transmission-remote to get torrent list from transmission-remote list
 # use sed to delete first / last line of output, and remove leading spaces
