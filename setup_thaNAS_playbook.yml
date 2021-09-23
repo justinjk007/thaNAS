@@ -217,23 +217,23 @@
       become: yes
       become_user: kaipada
       tags: [ 'transmission' ]
-    - name: Setup boruto renaming system
-      ansible.builtin.copy:
-        src: rename_boruto.sh
-        dest: /home/kaipada/plex/rename_boruto.sh
-        owner: kaipada
-        group: kaipada
-        mode: '0700'
-      tags: [ 'boruto' ]
-    - name: Ensure boruto renaming system once every sunday
-      ansible.builtin.cron:
-        name: "rename boruto"
-        hour: "6" # 6 am
-        weekday: "0" # sunday
-        job: "/home/kaipada/plex/rename_boruto.sh > /tmp/boruto_renaming.log  2>&1"
-      become: yes
-      become_user: kaipada
-      tags: [ 'boruto' ]
+    # - name: Setup boruto renaming system
+    #   ansible.builtin.copy:
+    #     src: rename_boruto.sh
+    #     dest: /home/kaipada/plex/rename_boruto.sh
+    #     owner: kaipada
+    #     group: kaipada
+    #     mode: '0700'
+    #   tags: [ 'boruto' ]
+    # - name: Ensure boruto renaming system once every sunday
+    #   ansible.builtin.cron:
+    #     name: "rename boruto"
+    #     hour: "6" # 6 am
+    #     weekday: "0" # sunday
+    #     job: "/home/kaipada/plex/rename_boruto.sh > /tmp/boruto_renaming.log  2>&1"
+    #   become: yes
+    #   become_user: kaipada
+    #   tags: [ 'boruto' ]
     - name: Download PlexTraktSync
       get_url:
          url : https://github.com/Taxel/PlexTraktSync/archive/refs/tags/0.8.16.zip
