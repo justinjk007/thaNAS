@@ -1,6 +1,5 @@
-* [[file:/ssh:kaipada@192.168.0.10:~/][thaNAS]]
-
-#+html: <a href="https://badges.pufler.dev"><img alt="Last updated date" src="https://badges.pufler.dev/updated/justinjk007/thaNAS" /></a>
+* [[file:/ssh:kaipada@192.168.0.10:~/][thaNAS]] 
+#+html: <a href="https://badges.pufler.dev"><img alt="Last updated date" src="https://badges.pufler.dev/updated/justinjk007/thaNAS" align="right"/></a>
 
 #+CAPTION: Purple bad guy saying I am inevitable
 #+html: <p align="center"><img src="fluff/MrPurple.gif" /></p>
