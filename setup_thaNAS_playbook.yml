@@ -246,11 +246,11 @@
         executable: pip3
       tags: [ 'trakt' ]
       # Setup the app: https://github.com/Taxel/PlexTraktSync#setup
-    - name: Run plexTraktSync on an hourly basis
+    - name: Run plexTraktSync once a day
       ansible.builtin.cron:
         name: "PlexTraktSync"
         minute: '5'
-        hour: "7,8,9,10,12,13,14,15,16,17,18,19,20,21,22,23"
+        hour: "7"
         job: "date > /tmp/plex_trakt_sync.log && cd /home/kaipada/plex/PlexTraktSync-0.8.16 && ./plex_trakt_sync.sh >> /tmp/plex_trakt_sync.log  2>&1"
       become: yes
       become_user: kaipada
