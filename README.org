@@ -128,6 +128,18 @@ cd ~/plex/PlexTraktSync-0.8.16
 python3 main.py
 #+end_src
 
+** R-syncing stuff to backup drive
+
+#+begin_src sh
+lsblk -f # get disk information and device name
+sudo mkdir /media/kaipada/My_passport
+sudo mount /dev/sdb1 /media/kaipada/My_passport
+
+rsync -azvv --progress /home/kaipada/media/movies/* /media/kaipada/My_passport/movies
+sleep 120s
+rsync -azvv --progress /home/kaipada/media/tv/* /media/kaipada/My_passport/tv
+#+end_src
+
 ** Notes
 
 Change entire season audio track easily: https://www.pastatool.com/
