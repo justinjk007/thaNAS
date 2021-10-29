@@ -220,7 +220,7 @@
       tags: [ 'transmission' ]
     - name: Download PlexTraktSync
       get_url:
-         url : https://github.com/Taxel/PlexTraktSync/archive/refs/tags/0.8.16.zip
+         url : https://github.com/Taxel/PlexTraktSync/archive/refs/tags/0.15.6.zip
          dest: /home/kaipada/plex/PlexTraktSync.zip
          owner: kaipada
          group: kaipada
@@ -242,7 +242,7 @@
       tags: [ 'trakt' ]
     - name: Install python requirements for PlexTraktSync
       pip:
-        requirements: /home/kaipada/plex/PlexTraktSync-0.8.16/requirements.txt
+        requirements: /home/kaipada/plex/PlexTraktSync-0.15.6/requirements.txt
         executable: pip3
       tags: [ 'trakt' ]
       # Setup the app: https://github.com/Taxel/PlexTraktSync#setup
@@ -251,7 +251,7 @@
         name: "PlexTraktSync"
         minute: '5'
         hour: "7"
-        job: "date > /tmp/plex_trakt_sync.log && cd /home/kaipada/plex/PlexTraktSync-0.8.16 && ./plex_trakt_sync.sh >> /tmp/plex_trakt_sync.log  2>&1"
+        job: "date > /tmp/plex_trakt_sync.log && cd /home/kaipada/plex/PlexTraktSync-0.15.6 && python3 -m plex_trakt_sync >> /tmp/plex_trakt_sync.log  2>&1"
       become: yes
       become_user: kaipada
-      tags: [ 'traktcron' ]
+      tags: [ 'traktcron', 'trakt' ]
