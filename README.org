@@ -67,7 +67,7 @@ PASSWORD_7Z: password used when backing up config files
 #+begin_src sh
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags transmission
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags trakt
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags passport
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup
@@ -140,6 +140,19 @@ sudo mount /dev/sdb1 /media/kaipada/My_passport
 rsync -azvv --progress /home/kaipada/media/movies/* /media/kaipada/My_passport/movies
 sleep 120s
 rsync -azvv --progress /home/kaipada/media/tv/* /media/kaipada/My_passport/tv
+#+end_src
+
+** Setting up wake on lan
+
+Find the Ethernet device id
+#+begin_src sh
+sudo lshw -class network -short
+# /0/100/1c.3/0  enp7s0       network        RTL810xE PCI Express Fast Ethernet controller
+# enp7s0 in this case
+
+sudo ethtool enp7s0 # view details
+
+sudo ethtool -s enp7s0 wol g # enable wake on lan, this needs to be run after every reboot
 #+end_src
 
 ** Notes
