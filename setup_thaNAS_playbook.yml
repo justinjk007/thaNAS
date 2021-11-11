@@ -71,6 +71,7 @@
         - /mnt/data/downloads
         - /mnt/data/media/tv
         - /mnt/data/media/movies
+        - /mnt/data/media/music
         - /home/kaipada/plex
     - name: Create symlinks
       file:
