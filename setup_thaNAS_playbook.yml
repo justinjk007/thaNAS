@@ -186,8 +186,7 @@
     - name: Ensure backup job is once a day
       ansible.builtin.cron:
         name: "backup config"
-        minute: "5"
-        hour: "18" # 6 'o clock
+        special_time: daily
         job: "/home/kaipada/plex/backup_config.sh > /tmp/backup_config.log  2>&1"
       become: yes
       become_user: kaipada
