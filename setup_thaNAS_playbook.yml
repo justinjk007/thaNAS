@@ -224,12 +224,10 @@
         group: kaipada
         mode: '0700'
       tags: [ 'transmission' ]
-    - name: Ensure transmission cleanup job is run once a week
+    - name: Ensure transmission cleanup job is run once a month
       ansible.builtin.cron:
         name: "remove completed"
-        minute: "7"
-        hour: "18" # evening at 6 'O clock
-        weekday: "0" # sunday
+        special_time: monthly
         job: "/home/kaipada/plex/remove_completed.sh > /tmp/cleanup_transmission.log  2>&1"
       become: yes
       become_user: kaipada
