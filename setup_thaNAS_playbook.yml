@@ -51,6 +51,7 @@
         regexp: '^(.*)HandleLidSwitch='
         line: "HandleLidSwitch=ignore"
     - name: Enable wake on lan after every reboot
+      # Find the Ethernet device id, more info in the readme file
       ansible.builtin.cron:
         name: "enable wake on lan"
         special_time: reboot
@@ -265,11 +266,10 @@
         executable: pip3
       tags: [ 'trakt' ]
       # Setup the app: https://github.com/Taxel/PlexTraktSync#setup
-    - name: Run plexTraktSync once a day
+    - name: Run plexTraktSync hourly
       ansible.builtin.cron:
         name: "PlexTraktSync"
-        minute: '5'
-        hour: "7"
+        special_time: hourly
         job: "date > /tmp/plex_trakt_sync.log && cd /home/kaipada/plex/PlexTraktSync-0.15.10 && python3 -m plex_trakt_sync >> /tmp/plex_trakt_sync.log  2>&1"
       become: yes
       become_user: kaipada
