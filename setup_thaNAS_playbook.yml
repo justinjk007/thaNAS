@@ -50,6 +50,12 @@
         path: /etc/systemd/logind.conf
         regexp: '^(.*)HandleLidSwitch='
         line: "HandleLidSwitch=ignore"
+    - name: Enable wake on lan after every reboot
+      ansible.builtin.cron:
+        name: "enable wake on lan"
+        special_time: reboot
+        job: "ethtool -s enp7s0 wol g > /tmp/enable_wake_on_lan.log  2>&1"
+        tags: [ 'wol', 'wake on lan' ]
     - name: Setup screen and other configs
       ansible.builtin.copy:
         src: '{{ item }}'
