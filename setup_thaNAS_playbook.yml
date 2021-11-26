@@ -56,7 +56,7 @@
         name: "enable wake on lan"
         special_time: reboot
         job: "ethtool -s enp7s0 wol g > /tmp/enable_wake_on_lan.log  2>&1"
-        tags: [ 'wol', 'wake on lan' ]
+      tags: [ 'wol', 'wake on lan' ]
     - name: Setup screen and other configs
       ansible.builtin.copy:
         src: '{{ item }}'
@@ -69,6 +69,35 @@
         - .bashrc
         - .bash_profile
       tags: [ 'bash' ]
+    - name: Add synology NAS to the hosts file
+      ansible.builtin.lineinfile:
+        path: /etc/hosts
+        line: 192.168.0.29 synology
+        insertafter: EOF
+      tags: [ 'synology' ]
+    - name: Create a file with SMB credentials
+      ansible.builtin.copy:
+        src: .smbcredentials
+        dest: /home/kaipada/.smbcredentials
+        owner: kaipada
+        group: kaipada
+        mode: '0600'
+      tags: [ 'synology' ]
+    - name: Change password in credentials file
+      ansible.builtin.lineinfile:
+        path: /home/kaipada/.smbcredentials
+        regexp: 'password='
+        line: "password={{ SMP_PASSWORD }}"
+      tags: [ 'synology' ]
+    - name: Add synology NAS to the system with cifs
+      ansible.builtin.lineinfile:
+        path: /etc/fstab
+        line: //synology/media /mnt/nas_data cifs credentials=/home/kaipada/.smbcredentials,vers=3.0,uid=1000,gid=1000 0 0
+        insertafter: EOF
+      tags: [ 'synology' ]
+    - name: Mount the NAS
+      ansible.builtin.command: mount /mnt/nas_data
+      tags: [ 'synology' ]
     - name: Create media directories
       file:
         path: '{{ item }}'
@@ -80,9 +109,15 @@
         - /mnt/data/media/movies
         - /mnt/data/media/music
         - /home/kaipada/plex
+        - /mnt/nas_data
+        - /mnt/nas_data/downloads
+        - /mnt/nas_data/media/tv
+        - /mnt/nas_data/media/movies
+        - /mnt/nas_data/media/music
+      tags: [ 'synology' ]
     - name: Create symlinks
       file:
-        src: "/mnt/data/{{ item }}"
+        src: "/mnt/nas_data/{{ item }}"
         dest: "/home/kaipada/{{ item }}"
         state: link
       with_items:
@@ -90,7 +125,11 @@
         - media
     - name: Install Packages
       apt: name={{ item }} update_cache=yes state=latest
-      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg', 'lsb-release', 'p7zip-full','python3-pip', 'intel-gpu-tools' ]
+      loop: [ 'vim','rsync','wget','screen', 'apt-transport-https', 'ca-certificates', 'curl' ,'gnupg' ]
+      tags: [ 'install' ]
+    - name: Install Packages
+      apt: name={{ item }} update_cache=yes state=latest
+      loop: [ 'lsb-release', 'p7zip-full','python3-pip', 'intel-gpu-tools', 'cifs-utils' ]
       tags: [ 'install' ]
     - name: Get ubuntu version
       command: lsb_release -cs
@@ -198,21 +237,21 @@
       become: yes
       become_user: kaipada
       tags: [ 'backup']
-    - name: Setup data backup system to passport HDD
-      ansible.builtin.copy:
-        src: backup_to_passport.sh
-        dest: /home/kaipada/plex/backup_to_passport.sh
-        owner: kaipada
-        group: kaipada
-        mode: '0755'
-      tags: [ 'passport']
-    - name: Ensure backup job is once a day
-      ansible.builtin.cron:
-        name: "backup config"
-        minute: "5"
-        hour: "8" # 8am
-        job: "/home/kaipada/plex/backup_to_passport.sh > /tmp/passport_backup_config.log  2>&1"
-      tags: [ 'passport']
+    # - name: Setup data backup system to passport HDD
+    #   ansible.builtin.copy:
+    #     src: backup_to_passport.sh
+    #     dest: /home/kaipada/plex/backup_to_passport.sh
+    #     owner: kaipada
+    #     group: kaipada
+    #     mode: '0755'
+    #   tags: [ 'passport']
+    # - name: Ensure backup job is once a day
+    #   ansible.builtin.cron:
+    #     name: "backup config"
+    #     minute: "5"
+    #     hour: "8" # 8am
+    #     job: "/home/kaipada/plex/backup_to_passport.sh > /tmp/passport_backup_config.log  2>&1"
+    #   tags: [ 'passport']
     - name: Add transmission repository into sources list
       ansible.builtin.apt_repository:
         validate_certs: no

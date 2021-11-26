@@ -60,6 +60,7 @@ password: server_password_we_wanna_set
 OPENVPN_USERNAME: sdsdsijsldijij
 OPENVPN_PASSWORD: sdopksdpjsdpsijpass
 PASSWORD_7Z: password used when backing up config files
+SMP_PASSWORD: password used in smbcredentials
 #+end_src
 
 ** Execute the playbook
@@ -67,7 +68,7 @@ PASSWORD_7Z: password used when backing up config files
 #+begin_src sh
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags transmission
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags passport
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags synology
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup
@@ -130,7 +131,7 @@ cd ~/plex/PlexTraktSync-0.8.16
 python3 main.py
 #+end_src
 
-** R-syncing stuff to backup drive
+** R-syncing stuff
 
 #+begin_src sh
 lsblk -f # get disk information and device name
@@ -138,8 +139,9 @@ sudo mkdir /media/kaipada/My_passport
 sudo mount /dev/sdb1 /media/kaipada/My_passport
 
 rsync -azvv --progress /home/kaipada/media/movies/* /media/kaipada/My_passport/movies
-sleep 120s
 rsync -azvv --progress /home/kaipada/media/tv/* /media/kaipada/My_passport/tv
+
+rsync -azvv --progress /mnt/data/* /mnt/nas_data/
 #+end_src
 
 ** Setting up wake on lan
@@ -159,3 +161,13 @@ sudo ethtool -s enp7s0 wol g # enable wake on lan, this needs to be run after ev
 
 Change entire season audio track easily: https://www.pastatool.com/
   - Make sure to turn off VPN before connecting to it
+
+** NAS
+
+https://0ut3r.space/2019/07/23/mount-nas/
+
+#+begin_src sh
+//synology/media /mnt/nas_data cifs credentials=/home/kaipada/.smbcredentials,vers=3.0,uid=1000,gid=1000 0 0
+
+synology:/volume1/media /mnt/nas_data nfs rsize=8192,wsize=8192,timeo=14,intr
+#+end_src

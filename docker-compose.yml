@@ -21,7 +21,7 @@ services:
       - TZ=America/Toronto
     volumes:
       - ./config/sonarr:/config
-      - /mnt/data:/mnt/data
+      - /mnt/nas_data:/mnt/nas_data
     ports:
       - 8989:8989
     depends_on:
@@ -38,7 +38,7 @@ services:
       - TZ=America/Toronto
     volumes:
       - ./config/radarr:/config
-      - /mnt/data:/mnt/data
+      - /mnt/nas_data:/mnt/nas_data
     ports:
       - 7878:7878
     depends_on:
@@ -50,7 +50,7 @@ services:
     image: haugene/transmission-openvpn
     container_name: transmission
     volumes:
-        - /mnt/data:/mnt/data
+        - /mnt/nas_data:/mnt/nas_data
     environment:
         - PUID=1000
         - PGID=1000
@@ -60,7 +60,7 @@ services:
         - OPENVPN_USERNAME=username
         - OPENVPN_PASSWORD=pass
         - WEBPROXY_ENABLED=false
-        - TRANSMISSION_DOWNLOAD_DIR=/mnt/data/downloads
+        - TRANSMISSION_DOWNLOAD_DIR=/mnt/nas_data/downloads
         - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=true
         - TRANSMISSION_SEED_QUEUE_ENABLED=true
         - TRANSMISSION_INCOMPLETE_DIR_ENABLED=false
@@ -80,7 +80,7 @@ services:
     image: linuxserver/plex
     container_name: plex
     volumes:
-      - /mnt/data/media:/media
+      - /mnt/nas_data/media:/media
       - ./config/plex:/config
     devices:
       - "/dev/dri:/dev/dri"
