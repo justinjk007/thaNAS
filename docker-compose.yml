@@ -13,7 +13,7 @@ services:
       - 9117:9117
     restart: unless-stopped
   sonarr:
-    image: linuxserver/sonarr:preview
+    image: linuxserver/sonarr:latest
     container_name: sonarr
     environment:
       - PUID=1000
@@ -29,7 +29,7 @@ services:
       - transmission
     restart: unless-stopped
   radarr:
-    image: linuxserver/radarr:preview
+    image: linuxserver/radarr:latest
     container_name: radarr
     hostname: radarr
     environment:
