@@ -103,17 +103,14 @@
         path: '{{ item }}'
         state: directory
       with_items:
-        - /mnt/data
-        - /mnt/data/downloads
-        - /mnt/data/media/tv
-        - /mnt/data/media/movies
-        - /mnt/data/media/music
         - /home/kaipada/plex
         - /mnt/nas_data
         - /mnt/nas_data/downloads
         - /mnt/nas_data/media/tv
         - /mnt/nas_data/media/movies
         - /mnt/nas_data/media/music
+        - /mnt/nas_data/media/private_tv
+        - /mnt/nas_data/media/private_movies
       tags: [ 'synology' ]
     - name: Create symlinks
       file:
