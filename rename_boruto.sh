@@ -10,6 +10,10 @@ do
     if [ -n "$episode" ]; then
 	echo "BAD ENTRY: $entry"
 	mv "${entry}" "Boruto - Naruto Next Generations - S01E${episode}.mkv"
+	# After renaming entry, move it out of this folder and then bring it back so plex can re-check episode
+	mv "Boruto - Naruto Next Generations - S01E${episode}.mkv" "../../"
+	sleep 3s
+	mv "../../Boruto - Naruto Next Generations - S01E${episode}.mkv" "."
 	episode=""
     else
 	echo "GOOD ENTRY: $entry"
