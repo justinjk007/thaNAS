@@ -61,11 +61,14 @@ services:
         - OPENVPN_PASSWORD=pass
         - WEBPROXY_ENABLED=false
         - TRANSMISSION_DOWNLOAD_DIR=/mnt/nas_data/downloads
+        - TRANSMISSION_IDLE_SEEDING_LIMIT=10080 # 1 week
         - TRANSMISSION_IDLE_SEEDING_LIMIT_ENABLED=true
         - TRANSMISSION_SEED_QUEUE_ENABLED=true
         - TRANSMISSION_INCOMPLETE_DIR_ENABLED=false
         - TRANSMISSION_RATIO_LIMIT_ENABLED=true
-        - TRANSMISSION_RATIO_LIMIT=4
+        - TRANSMISSION_RATIO_LIMIT=6
+        - SPEED_LIMIT_UP_ENABLED=true
+        - SPEED_LIMIT_UP=10000 # 10 Mbs
         - LOCAL_NETWORK=192.168.0.0/16
     cap_add:
         - NET_ADMIN
@@ -81,6 +84,7 @@ services:
     container_name: plex
     volumes:
       - /mnt/nas_data/media:/media
+      - /home/kaipada/plex/pre-rolls:/pre-rolls
       - ./config/plex:/config
     devices:
       - "/dev/dri:/dev/dri"

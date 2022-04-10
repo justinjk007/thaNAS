@@ -2,7 +2,7 @@
 
 # Boruto - Naruto Next Generations - 177 (1080p).mkv ==>  Boruto - Naruto Next Generations - S01E177.mkv
 
-cd "$HOME/media/tv/Boruto - Naruto Next Generations/Season 1"
+cd "$HOME/media/anime/Boruto - Naruto Next Generations/Season 1"
 
 for entry in *
 do

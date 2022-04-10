@@ -111,6 +111,8 @@
         - /mnt/nas_data/media/music
         - /mnt/nas_data/media/private_tv
         - /mnt/nas_data/media/private_movies
+        - /mnt/nas_data/media/malayalam_movies
+        - /mnt/nas_data/media/anime
       tags: [ 'synology' ]
     - name: Create symlinks
       file:
