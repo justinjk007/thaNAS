@@ -56,7 +56,7 @@ services:
         - PGID=1000
         - CREATE_TUN_DEVICE=true
         - OPENVPN_PROVIDER=MULLVAD
-        - OPENVPN_CONFIG=CA Toronto
+        - OPENVPN_CONFIG=ca_tor
         - OPENVPN_USERNAME=username
         - OPENVPN_PASSWORD=pass
         - WEBPROXY_ENABLED=false

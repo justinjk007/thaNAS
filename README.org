@@ -57,8 +57,8 @@ file:ansible_vault.yml --> Put passwords here
 
 #+begin_src yml
 password: server_password_we_wanna_set
-OPENVPN_USERNAME: sdsdsijsldijij
-OPENVPN_PASSWORD: sdopksdpjsdpsijpass
+OPENVPN_USERNAME: for mullvad use account number
+OPENVPN_PASSWORD: for mullvad use 'm' as the password
 PASSWORD_7Z: password used when backing up config files
 SMP_PASSWORD: password used in smbcredentials
 #+end_src
@@ -68,7 +68,7 @@ SMP_PASSWORD: password used in smbcredentials
 #+begin_src sh
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt
 ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags transmission
-ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags synology
+ansible-playbook setup_thaNAS_playbook.yml -i ansible_hosts.conf --vault-pass-file ansible_vault_password.txt --tags compose
 #+end_src
 
 ** Bring the docker containers up manually now that server is setup
