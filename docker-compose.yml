@@ -55,8 +55,8 @@ services:
         - PUID=1000
         - PGID=1000
         - CREATE_TUN_DEVICE=true
-        - OPENVPN_PROVIDER=NORDVPN
-        - NORDVPN_COUNTRY=CA
+        - OPENVPN_PROVIDER=MULLVAD
+        - OPENVPN_CONFIG=CA Toronto
         - OPENVPN_USERNAME=username
         - OPENVPN_PASSWORD=pass
         - WEBPROXY_ENABLED=false
@@ -78,6 +78,9 @@ services:
             max-size: 10m
     ports:
         - "9091:9091"
+    # ipv6 must be enabled for Mullvad to work
+    sysctls:
+      - "net.ipv6.conf.all.disable_ipv6=0"
     restart: unless-stopped
   plex:
     image: linuxserver/plex
